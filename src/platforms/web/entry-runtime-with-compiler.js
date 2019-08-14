@@ -30,6 +30,8 @@ Vue.prototype.$mount = function (
   }
 
   const options = this.$options
+
+  /* jusetwe web 平台才会执行特定的编译操作  */
   // resolve template/el and convert to render function
   if (!options.render) {
     let template = options.template
@@ -79,6 +81,7 @@ Vue.prototype.$mount = function (
       }
     }
   }
+  /* justwe 然后返回公共的mount执行结果 */
   return mount.call(this, el, hydrating)
 }
 
