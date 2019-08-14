@@ -18,3 +18,7 @@ src
 4. npm run dev
 5. 在examples目录下创建自己的html文件，引入vue `<script src="../../dist/vue.js"></script>`，单文件打开调试
 6. 浏览器控制台sources找到资源打断点
+
+
+### 虚拟dom是什么
+产生：new Vue 挂载 $mount > mountComponent > vm._update(vm._render())。【vm._render()】产生了虚拟dom，在vue中可以认为是VNode对象

@@ -697,6 +697,7 @@ export function createPatchFunction (backend) {
     }
   }
 
+  /* justwe 比对新旧vnode  diff后返回新的dom */
   return function patch (oldVnode, vnode, hydrating, removeOnly) {
     if (isUndef(vnode)) {
       if (isDef(oldVnode)) invokeDestroyHook(oldVnode)
