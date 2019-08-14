@@ -56,6 +56,7 @@ export function initLifecycle (vm: Component) {
 }
 
 export function lifecycleMixin (Vue: Class<Component>) {
+  /* justwe 打补丁方法 会被$mount调用一次 */
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
@@ -64,10 +65,13 @@ export function lifecycleMixin (Vue: Class<Component>) {
     vm._vnode = vnode
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
+
+    /* justwe 如果不存在虚拟dom直接挂载  __patch__在web平台 \vue\src\platforms\web\runtime\index.js*/
     if (!prevVnode) {
       // initial render
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
+      /* 比对新旧dom节点 */
       // updates
       vm.$el = vm.__patch__(prevVnode, vnode)
     }
@@ -138,6 +142,9 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
+/* justwe 构造更新函数 
+  核心功能是实例一个watcher 传入updateComponent更新函数，之后数据更新会调用render 然后_patch 更新视图
+*/
 export function mountComponent (
   vm: Component,
   el: ?Element,
@@ -187,6 +194,7 @@ export function mountComponent (
     }
   } else {
     updateComponent = () => {
+      /* justwe _render()返回了虚拟dom 然后_update进行更新 */
       vm._update(vm._render(), hydrating)
     }
   }

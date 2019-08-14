@@ -10,7 +10,7 @@ src
 ├── shared          # 共享代码
 ```
 
-## 本机断点调试方式
+## 断点查看源码
 
 1. 下载项目，执行 `npm i`
 2. 安装rollup， `npm i rollup`
