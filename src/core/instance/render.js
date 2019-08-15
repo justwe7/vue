@@ -83,6 +83,8 @@ export function renderMixin (Vue: Class<Component>) {
     vm.$vnode = _parentVnode
     // render self
     let vnode
+
+    
     try {
       // There's no need to maintain a stack because all render fns are called
       // separately from one another. Nested component's render fns are called

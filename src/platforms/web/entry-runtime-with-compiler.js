@@ -36,6 +36,7 @@ Vue.prototype.$mount = function (
   if (!options.render) {
     let template = options.template
     if (template) {
+      /* 解析template */
       if (typeof template === 'string') {
         if (template.charAt(0) === '#') {
           template = idToTemplate(template)
@@ -56,6 +57,7 @@ Vue.prototype.$mount = function (
         return this
       }
     } else if (el) {
+      /* 否则取外层的父级 */
       template = getOuterHTML(el)
     }
     if (template) {
@@ -64,6 +66,7 @@ Vue.prototype.$mount = function (
         mark('compile')
       }
 
+      /* 通过compileToFunctions方法传入 template 获取到render函数  render函数返回的是虚拟dom => VNode  */
       const { render, staticRenderFns } = compileToFunctions(template, {
         outputSourceRange: process.env.NODE_ENV !== 'production',
         shouldDecodeNewlines,

@@ -1,7 +1,9 @@
 /* @flow */
 /* justwe 操作原生dom的方法封装 */
 import * as nodeOps from 'web/runtime/node-ops'
+// E:\justwe\WWW\-github\vue\src\core\vdom\patch.js
 import { createPatchFunction } from 'core/vdom/patch'
+/* 操作标签的属性 新旧vnode比较 然后进行属性修改 */
 import baseModules from 'core/vdom/modules/index'
 import platformModules from 'web/runtime/modules/index'
 

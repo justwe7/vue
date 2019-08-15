@@ -49,14 +49,14 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
-    initEvents(vm)
-    initRender(vm)
-    callHook(vm, 'beforeCreate')
-    initInjections(vm) // resolve injections before data/props
-    initState(vm)
-    initProvide(vm) // resolve provide after data/props
-    callHook(vm, 'created')
+    initLifecycle(vm)//justwe   设置$parent/$root/$refs/$children等关系值
+    initEvents(vm)//vm._events updateComponents  监听事件
+    initRender(vm)//vm._c vm.$createElement  初始化插槽 createElement方法声明
+    callHook(vm, 'beforeCreate')// 生命周期通知
+    initInjections(vm) // resolve injections before data/props  justwe resolveInject  defineReactive 注入数据依赖
+    initState(vm)// initProps 初始化Methods data computed watch 
+    initProvide(vm) // resolve provide after data/props   vm._provided 为后代提供数据
+    callHook(vm, 'created')//生命周期
 
     /* istanbul ignore if */
     if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
@@ -64,7 +64,7 @@ export function initMixin (Vue: Class<Component>) {
       mark(endTag)
       measure(`vue ${vm._name} init`, startTag, endTag)
     }
-
+    //如果new时候有el直接调用$mount挂载
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }

@@ -22,3 +22,8 @@ src
 
 ### 虚拟dom是什么
 产生：new Vue 挂载 $mount > mountComponent > vm._update(vm._render())。【vm._render()】产生了虚拟dom，在vue中可以认为是VNode对象
+
+### 大纲
+整理一晚上，大概按自己了解列了一下这么🐂🍺项目的设计   
+
+![大纲](img/map.jpg)
