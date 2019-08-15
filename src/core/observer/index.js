@@ -132,6 +132,7 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 /**
  * Define a reactive property on an Object.
  */
+/* justwe 定义对象getter setter */
 export function defineReactive (
   obj: Object,
   key: string,
@@ -139,6 +140,7 @@ export function defineReactive (
   customSetter?: ?Function,
   shallow?: boolean
 ) {
+  //一个key生成一个deo实例  闭包内
   const dep = new Dep()
 
   const property = Object.getOwnPropertyDescriptor(obj, key)
@@ -153,7 +155,7 @@ export function defineReactive (
     val = obj[key]
   }
 
-  let childOb = !shallow && observe(val)
+  let childOb = !shallow && observe(val)//递归子组件实现响应式
   Object.defineProperty(obj, key, {
     enumerable: true,
     configurable: true,
@@ -161,10 +163,10 @@ export function defineReactive (
       const value = getter ? getter.call(obj) : val
       if (Dep.target) {
         dep.depend()
-        if (childOb) {
+        if (childOb) {//如果存在observer 依赖追加到ob
           childOb.dep.depend()
           if (Array.isArray(value)) {
-            dependArray(value)
+            dependArray(value)//数组深度监听
           }
         }
       }

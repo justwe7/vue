@@ -14,10 +14,10 @@ function Vue (options) {
   this._init(options)
 }
 
-initMixin(Vue)
-stateMixin(Vue)
-eventsMixin(Vue)
-lifecycleMixin(Vue)
-renderMixin(Vue)
+initMixin(Vue)//初始化vue组件上一些如data created methods watch等
+stateMixin(Vue)//定义$data $props $set $delete $watch
+eventsMixin(Vue)//$on $emit $off $once
+lifecycleMixin(Vue)//定义更新 _update $forceUpdate $destory
+renderMixin(Vue)//render函数 slot createElement调用
 
 export default Vue
