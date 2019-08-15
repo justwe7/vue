@@ -24,6 +24,6 @@ src
 产生：new Vue 挂载 $mount > mountComponent > vm._update(vm._render())。【vm._render()】产生了虚拟dom，在vue中可以认为是VNode对象
 
 ### 大纲
-整理一晚上，大概按自己了解列了一下这么🐂🍺项目的设计   
+整理一晚上，大概按自己了解列了一下这么🐂🍺项目的设计。有理解错误的地方热心人士看到请帮忙指出一下😂     
 
 ![大纲](img/map.jpg)
