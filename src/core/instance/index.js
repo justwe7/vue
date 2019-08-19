@@ -14,10 +14,10 @@ function Vue (options) {
   this._init(options)
 }
 
-initMixin(Vue)//初始化vue组件上一些如data created methods watch等
+initMixin(Vue)//初始化vue组件上一些如data created methods watch等 触发生命周期钩子函数：beforeCreate created
 stateMixin(Vue)//定义$data $props $set $delete $watch
 eventsMixin(Vue)//$on $emit $off $once
-lifecycleMixin(Vue)//定义更新 _update $forceUpdate $destory
+lifecycleMixin(Vue)//定义更新 _update $forceUpdate $destory  触发生命周期钩子函数： 'beforeDestroy' , 'destroyed' , 'beforeMount' , 'beforeUpdate' , 'mounted', 'activated' , 'deactivated'
 renderMixin(Vue)//render函数 slot createElement调用
 
 export default Vue

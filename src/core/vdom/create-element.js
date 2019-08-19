@@ -44,6 +44,17 @@ export function createElement (
   return _createElement(context, tag, data, children, normalizationType)
 }
 
+/**
+ * @author huaxi.li
+ * @date 2019-08-19
+ * @export
+ * @param {Component} context  表示 VNode 的上下文环境  它是 Component 类型
+ * @param {(string | Class<Component> | Function | Object)} [tag]  tag 表示标签，它可以是一个字符串，也可以是一个 Component
+ * @param {VNodeData} [data]  data 表示 VNode 的数据，它是一个 VNodeData 类型
+ * @param {*} [children]  children 表示当前 VNode 的子节点，它是任意类型的，它接下来需要被规范为标准的 VNode 数组
+ * @param {number} [normalizationType]  normalizationType 表示子节点规范的类型，类型不同规范的方法也就不一样，它主要是参考 render 函数是编译生成的还是用户手写的。
+ * @returns {(VNode | Array<VNode>)}
+ */
 export function _createElement (
   context: Component,
   tag?: string | Class<Component> | Function | Object,

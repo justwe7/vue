@@ -220,6 +220,7 @@ export function createComponentInstanceForVnode (
     options.render = inlineTemplate.render
     options.staticRenderFns = inlineTemplate.staticRenderFns
   }
+  /* vnode.componentOptions.Ctor 对应的就是子组件的构造函数，它实际上是继承于 Vue 的一个构造器 Sub，相当于 new Sub(options) 这里有几个关键参数要注意几个点，_isComponent 为 true 表示它是一个组件，parent 表示当前激活的组件实例（注意，这里比较有意思的是如何拿到组件实例 */
   return new vnode.componentOptions.Ctor(options)
 }
 

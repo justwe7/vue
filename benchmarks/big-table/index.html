@@ -9,7 +9,7 @@
   </head>
   <body>
     <div id="el">
-      <h1>Rendering Dynamic Big Table</h1>
+      <h1>生成大表格数据</h1>
       <p>Reference: <a href="http://insin.github.io/ui-lib-samples/large-datasets/index.html">insin/ui-lib-samples/large-datasets</a></p>
 
       <p>
@@ -17,10 +17,10 @@
       </p>
 
       <p>
-        <button v-if="optimized" @click="loadBase">Disable optimization</button>
-        <button v-else @click="loadOptimized">Enable optimization (Object.freeze)</button>
-        <button @click="unmount">Unmount</button>
-        <button @click="rerender">Rerender with fresh data</button>
+        <button v-if="optimized" @click="loadBase">禁用优化</button>
+        <button v-else @click="loadOptimized">启用优化 (Object.freeze)</button>
+        <button @click="unmount">卸载</button>
+        <button @click="rerender">重新渲染数据</button>
       </p>
 
       <form>

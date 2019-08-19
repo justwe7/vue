@@ -8,6 +8,11 @@ import {
   defineReactive
 } from '../util/index'
 
+/* justwe vue使用createElement 来创建Vnode 
+vm._c vue内部渲染，template
+vm.$createElement  用户编写render函数会调用  
+核心都是createElement方法
+*/
 import { createElement } from '../vdom/create-element'
 import { installRenderHelpers } from './render-helpers/index'
 import { resolveSlots } from './render-helpers/resolve-slots'

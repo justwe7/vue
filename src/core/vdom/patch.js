@@ -401,6 +401,7 @@ export function createPatchFunction (backend) {
     }
   }
 
+  /* justwe 核心diff算法  实现vnode比对更新dom树 */
   function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
     let oldStartIdx = 0
     let newStartIdx = 0

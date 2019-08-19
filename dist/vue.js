@@ -1011,6 +1011,7 @@
   /**
    * Define a reactive property on an Object.
    */
+  /* justwe 定义对象getter setter */
   function defineReactive (
     obj,
     key,
@@ -1018,6 +1019,7 @@
     customSetter,
     shallow
   ) {
+    //一个key生成一个deo实例  闭包内
     var dep = new Dep();
 
     var property = Object.getOwnPropertyDescriptor(obj, key);
@@ -1032,7 +1034,7 @@
       val = obj[key];
     }
 
-    var childOb = !shallow && observe(val);
+    var childOb = !shallow && observe(val);//递归子组件实现响应式
     Object.defineProperty(obj, key, {
       enumerable: true,
       configurable: true,
@@ -1040,10 +1042,10 @@
         var value = getter ? getter.call(obj) : val;
         if (Dep.target) {
           dep.depend();
-          if (childOb) {
+          if (childOb) {//如果存在observer 依赖追加到ob
             childOb.dep.depend();
             if (Array.isArray(value)) {
-              dependArray(value);
+              dependArray(value);//数组深度监听
             }
           }
         }
@@ -3538,6 +3540,8 @@
       vm.$vnode = _parentVnode;
       // render self
       var vnode;
+
+      
       try {
         // There's no need to maintain a stack because all render fns are called
         // separately from one another. Nested component's render fns are called
@@ -3927,6 +3931,7 @@
   }
 
   function lifecycleMixin (Vue) {
+    /* justwe 打补丁方法 会被$mount调用一次 */
     Vue.prototype._update = function (vnode, hydrating) {
       var vm = this;
       var prevEl = vm.$el;
@@ -3935,10 +3940,13 @@
       vm._vnode = vnode;
       // Vue.prototype.__patch__ is injected in entry points
       // based on the rendering backend used.
+
+      /* justwe 如果不存在虚拟dom直接挂载  __patch__在web平台 \vue\src\platforms\web\runtime\index.js*/
       if (!prevVnode) {
         // initial render
         vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */);
       } else {
+        /* 比对新旧dom节点 */
         // updates
         vm.$el = vm.__patch__(prevVnode, vnode);
       }
@@ -4009,6 +4017,9 @@
     };
   }
 
+  /* justwe 构造更新函数 
+    核心功能是实例一个watcher 传入updateComponent更新函数，之后数据更新会调用render 然后_patch 更新视图
+  */
   function mountComponent (
     vm,
     el,
@@ -4058,6 +4069,7 @@
       };
     } else {
       updateComponent = function () {
+        /* justwe _render()返回了虚拟dom 然后_update进行更新 */
         vm._update(vm._render(), hydrating);
       };
     }
@@ -4988,14 +5000,14 @@
       }
       // expose real self
       vm._self = vm;
-      initLifecycle(vm);
-      initEvents(vm);
-      initRender(vm);
-      callHook(vm, 'beforeCreate');
-      initInjections(vm); // resolve injections before data/props
-      initState(vm);
-      initProvide(vm); // resolve provide after data/props
-      callHook(vm, 'created');
+      initLifecycle(vm);//justwe   设置$parent/$root/$refs/$children等关系值
+      initEvents(vm);//vm._events updateComponents  监听事件
+      initRender(vm);//vm._c vm.$createElement  初始化插槽 createElement方法声明
+      callHook(vm, 'beforeCreate');// 生命周期通知
+      initInjections(vm); // resolve injections before data/props  justwe resolveInject  defineReactive 注入数据依赖
+      initState(vm);// initProps 初始化Methods data computed watch 
+      initProvide(vm); // resolve provide after data/props   vm._provided 为后代提供数据
+      callHook(vm, 'created');//生命周期
 
       /* istanbul ignore if */
       if ( config.performance && mark) {
@@ -5003,7 +5015,7 @@
         mark(endTag);
         measure(("vue " + (vm._name) + " init"), startTag, endTag);
       }
-
+      //如果new时候有el直接调用$mount挂载
       if (vm.$options.el) {
         vm.$mount(vm.$options.el);
       }
@@ -5075,11 +5087,11 @@
     this._init(options);
   }
 
-  initMixin(Vue);
-  stateMixin(Vue);
-  eventsMixin(Vue);
-  lifecycleMixin(Vue);
-  renderMixin(Vue);
+  initMixin(Vue);//初始化vue组件上一些如data created methods watch等 触发生命周期钩子函数：beforeCreate created
+  stateMixin(Vue);//定义$data $props $set $delete $watch
+  eventsMixin(Vue);//$on $emit $off $once
+  lifecycleMixin(Vue);//定义更新 _update $forceUpdate $destory  触发生命周期钩子函数： 'beforeDestroy' , 'destroyed' , 'beforeMount' , 'beforeUpdate' , 'mounted', 'activated' , 'deactivated'
+  renderMixin(Vue);//render函数 slot createElement调用
 
   /*  */
 
@@ -5415,11 +5427,11 @@
     Vue.options._base = Vue;
 
     extend(Vue.options.components, builtInComponents);
-
-    initUse(Vue);
-    initMixin$1(Vue);
-    initExtend(Vue);
-    initAssetRegisters(Vue);
+    
+    initUse(Vue);//实现vue.use函数
+    initMixin$1(Vue);//vue.mixin函数
+    initExtend(Vue);//vue.extend
+    initAssetRegisters(Vue);//vue.component,directives,filters实现
   }
 
   initGlobalAPI(Vue);
@@ -6454,6 +6466,7 @@
       }
     }
 
+    /* justwe 比对新旧vnode  diff后返回新的dom */
     return function patch (oldVnode, vnode, hydrating, removeOnly) {
       if (isUndef(vnode)) {
         if (isDef(oldVnode)) { invokeDestroyHook(oldVnode); }
@@ -8444,7 +8457,7 @@
   // the directive module should be applied last, after all
   // built-in modules have been applied.
   var modules = platformModules.concat(baseModules);
-
+  /* justwe 继承基本的patch方法创建新的方法 为兼容不同平台 */
   var patch = createPatchFunction({ nodeOps: nodeOps, modules: modules });
 
   /**
@@ -9032,6 +9045,7 @@
   extend(Vue.options.directives, platformDirectives);
   extend(Vue.options.components, platformComponents);
 
+  /* justwe 打补丁 更新视图 */
   // install platform patch function
   Vue.prototype.__patch__ = inBrowser ? patch : noop;
 
@@ -11896,10 +11910,13 @@
     }
 
     var options = this.$options;
+
+    /* jusetwe web 平台才会执行特定的编译操作  */
     // resolve template/el and convert to render function
     if (!options.render) {
       var template = options.template;
       if (template) {
+        /* 解析template */
         if (typeof template === 'string') {
           if (template.charAt(0) === '#') {
             template = idToTemplate(template);
@@ -11920,6 +11937,7 @@
           return this
         }
       } else if (el) {
+        /* 否则取外层的父级 */
         template = getOuterHTML(el);
       }
       if (template) {
@@ -11928,6 +11946,7 @@
           mark('compile');
         }
 
+        /* 通过compileToFunctions方法传入 template 获取到render函数  render函数返回的是虚拟dom => VNode  */
         var ref = compileToFunctions(template, {
           outputSourceRange: "development" !== 'production',
           shouldDecodeNewlines: shouldDecodeNewlines,
@@ -11947,6 +11966,7 @@
         }
       }
     }
+    /* justwe 然后返回公共的mount执行结果 */
     return mount.call(this, el, hydrating)
   };
 

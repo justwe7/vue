@@ -12,7 +12,7 @@ import { pushTarget, popTarget } from '../observer/dep'
 import {
   warn,
   noop,
-  remove,
+  remomve,
   emptyObject,
   validateProp,
   invokeWithErrorHandling
@@ -56,7 +56,7 @@ export function initLifecycle (vm: Component) {
 }
 
 export function lifecycleMixin (Vue: Class<Component>) {
-  /* justwe 打补丁方法 会被$mount调用一次 */
+  /* justwe 打补丁方法 会被$mount调用一次 方法的作用是把 VNode 渲染成真实的 DOM */
   Vue.prototype._update = function (vnode: VNode, hydrating?: boolean) {
     const vm: Component = this
     const prevEl = vm.$el
@@ -142,7 +142,7 @@ export function lifecycleMixin (Vue: Class<Component>) {
   }
 }
 
-/* justwe 构造更新函数 
+/* justwe 构造更新函数   src\platforms\web\runtime\index.js 调用方法
   核心功能是实例一个watcher 传入updateComponent更新函数，之后数据更新会调用render 然后_patch 更新视图
 */
 export function mountComponent (
@@ -213,6 +213,10 @@ export function mountComponent (
 
   // manually mounted instance, call mounted on self
   // mounted is called for render-created child components in its inserted hook
+  /* 
+    vm.$vnode 如果为 null，则表明这不是一次组件的初始化过程，而是我们通过外部 new Vue 初始化过程。那么对于组件，它的 mounted 时机在哪儿呢？ 
+    组件的 VNode patch 到 DOM 后，会执行 invokeInsertHook 函数，把 insertedVnodeQueue 里保存的钩子函数依次执行一遍，它的定义在 src/core/vdom/patch.js
+  */
   if (vm.$vnode == null) {
     vm._isMounted = true
     callHook(vm, 'mounted')
