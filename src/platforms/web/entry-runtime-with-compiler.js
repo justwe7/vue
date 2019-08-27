@@ -29,7 +29,7 @@ Vue.prototype.$mount = function (
     return this
   }
 
-  const options = this.$options
+  const options = this.$options//因为是对象，之后会的属性修改会影响引用地址的对象
 
   /* jusetwe web 平台才会执行特定的编译操作  */
   // resolve template/el and convert to render function

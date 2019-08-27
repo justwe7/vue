@@ -141,7 +141,7 @@
   /**
    * Remove an item from an array.
    */
-  function remove (arr, item) {
+  function remove$1 (arr, item) {
     if (arr.length) {
       var index = arr.indexOf(item);
       if (index > -1) {
@@ -723,7 +723,7 @@
   };
 
   Dep.prototype.removeSub = function removeSub (sub) {
-    remove(this.subs, sub);
+    remove$1(this.subs, sub);
   };
 
   Dep.prototype.depend = function depend () {
@@ -2246,7 +2246,7 @@
       hook.apply(this, arguments);
       // important: remove merged hook to ensure it's called only once
       // and prevent memory leak
-      remove(invoker.fns, wrappedHook);
+      remove$1(invoker.fns, wrappedHook);
     }
 
     if (isUndef(oldHook)) {
@@ -3283,6 +3283,7 @@
       options.render = inlineTemplate.render;
       options.staticRenderFns = inlineTemplate.staticRenderFns;
     }
+    /* vnode.componentOptions.Ctor 对应的就是子组件的构造函数，它实际上是继承于 Vue 的一个构造器 Sub，相当于 new Sub(options) 这里有几个关键参数要注意几个点，_isComponent 为 true 表示它是一个组件，parent 表示当前激活的组件实例（注意，这里比较有意思的是如何拿到组件实例 */
     return new vnode.componentOptions.Ctor(options)
   }
 
@@ -3356,6 +3357,17 @@
     return _createElement(context, tag, data, children, normalizationType)
   }
 
+  /**
+   * @author huaxi.li
+   * @date 2019-08-19
+   * @export
+   * @param {Component} context  表示 VNode 的上下文环境  它是 Component 类型
+   * @param {(string | Class<Component> | Function | Object)} [tag]  tag 表示标签，它可以是一个字符串，也可以是一个 Component
+   * @param {VNodeData} [data]  data 表示 VNode 的数据，它是一个 VNodeData 类型
+   * @param {*} [children]  children 表示当前 VNode 的子节点，它是任意类型的，它接下来需要被规范为标准的 VNode 数组
+   * @param {number} [normalizationType]  normalizationType 表示子节点规范的类型，类型不同规范的方法也就不一样，它主要是参考 render 函数是编译生成的还是用户手写的。
+   * @returns {(VNode | Array<VNode>)}
+   */
   function _createElement (
     context,
     tag,
@@ -3642,7 +3654,7 @@
       var timerLoading = null;
       var timerTimeout = null
 
-      ;(owner).$on('hook:destroyed', function () { return remove(owners, owner); });
+      ;(owner).$on('hook:destroyed', function () { return remove$1(owners, owner); });
 
       var forceRender = function (renderCompleted) {
         for (var i = 0, l = owners.length; i < l; i++) {
@@ -3774,7 +3786,7 @@
     target.$on(event, fn);
   }
 
-  function remove$1 (event, fn) {
+  function remove$2 (event, fn) {
     target.$off(event, fn);
   }
 
@@ -3794,7 +3806,7 @@
     oldListeners
   ) {
     target = vm;
-    updateListeners(listeners, oldListeners || {}, add, remove$1, createOnceHandler, vm);
+    updateListeners(listeners, oldListeners || {}, add, remove$2, createOnceHandler, vm);
     target = undefined;
   }
 
@@ -3931,7 +3943,7 @@
   }
 
   function lifecycleMixin (Vue) {
-    /* justwe 打补丁方法 会被$mount调用一次 */
+    /* justwe 打补丁方法 会被$mount调用一次 方法的作用是把 VNode 渲染成真实的 DOM */
     Vue.prototype._update = function (vnode, hydrating) {
       var vm = this;
       var prevEl = vm.$el;
@@ -4017,7 +4029,7 @@
     };
   }
 
-  /* justwe 构造更新函数 
+  /* justwe 构造更新函数   src\platforms\web\runtime\index.js 调用方法
     核心功能是实例一个watcher 传入updateComponent更新函数，之后数据更新会调用render 然后_patch 更新视图
   */
   function mountComponent (
@@ -4088,6 +4100,10 @@
 
     // manually mounted instance, call mounted on self
     // mounted is called for render-created child components in its inserted hook
+    /* 
+     vm.$vnode 如果为 null，则表明这不是一次组件的初始化过程，而是我们通过外部 new Vue 初始化过程。那么对于组件，它的 mounted 时机在哪儿呢？ 
+      组件的 VNode patch 到 DOM 后，会执行 invokeInsertHook 函数，把 insertedVnodeQueue 里保存的钩子函数依次执行一遍，它的定义在 src/core/vdom/patch.js
+    */
     if (vm.$vnode == null) {
       vm._isMounted = true;
       callHook(vm, 'mounted');
@@ -4610,7 +4626,7 @@
       // this is a somewhat expensive operation so we skip it
       // if the vm is being destroyed.
       if (!this.vm._isBeingDestroyed) {
-        remove(this.vm._watchers, this);
+        remove$1(this.vm._watchers, this);
       }
       var i = this.deps.length;
       while (i--) {
@@ -5294,7 +5310,7 @@
       cached.componentInstance.$destroy();
     }
     cache[key] = null;
-    remove(keys, key);
+    remove$1(keys, key);
   }
 
   var patternTypes = [String, RegExp, Array];
@@ -5361,7 +5377,7 @@
         if (cache[key]) {
           vnode.componentInstance = cache[key].componentInstance;
           // make current key freshest
-          remove(keys, key);
+          remove$1(keys, key);
           keys.push(key);
         } else {
           cache[key] = vnode;
@@ -5434,6 +5450,7 @@
     initAssetRegisters(Vue);//vue.component,directives,filters实现
   }
 
+  // 定义一些vue的全局方法
   initGlobalAPI(Vue);
 
   Object.defineProperty(Vue.prototype, '$isServer', {
@@ -5782,7 +5799,7 @@
     var refs = vm.$refs;
     if (isRemoval) {
       if (Array.isArray(refs[key])) {
-        remove(refs[key], ref);
+        remove$1(refs[key], ref);
       } else if (refs[key] === ref) {
         refs[key] = undefined;
       }
@@ -6168,6 +6185,7 @@
       }
     }
 
+    /* justwe 核心diff算法   */
     function updateChildren (parentElm, oldCh, newCh, insertedVnodeQueue, removeOnly) {
       var oldStartIdx = 0;
       var newStartIdx = 0;
@@ -7514,7 +7532,7 @@
     return function onceHandler () {
       var res = handler.apply(null, arguments);
       if (res !== null) {
-        remove$2(event, onceHandler, capture, _target);
+        remove$3(event, onceHandler, capture, _target);
       }
     }
   }
@@ -7569,7 +7587,7 @@
     );
   }
 
-  function remove$2 (
+  function remove$3 (
     name,
     handler,
     capture,
@@ -7590,7 +7608,7 @@
     var oldOn = oldVnode.data.on || {};
     target$1 = vnode.elm;
     normalizeEvents(on);
-    updateListeners(on, oldOn, add$1, remove$2, createOnceHandler$1, vnode.context);
+    updateListeners(on, oldOn, add$1, remove$3, createOnceHandler$1, vnode.context);
     target$1 = undefined;
   }
 
@@ -8016,7 +8034,7 @@
 
   function removeTransitionClass (el, cls) {
     if (el._transitionClasses) {
-      remove(el._transitionClasses, cls);
+      remove$1(el._transitionClasses, cls);
     }
     removeClass(el, cls);
   }
@@ -11909,7 +11927,7 @@
       return this
     }
 
-    var options = this.$options;
+    var options = this.$options;//因为是对象，之后会的属性修改会影响引用地址的对象
 
     /* jusetwe web 平台才会执行特定的编译操作  */
     // resolve template/el and convert to render function
